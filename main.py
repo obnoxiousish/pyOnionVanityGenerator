@@ -5,7 +5,6 @@ import base64
 import multiprocessing
 import os
 import json
-import binascii
 from nacl import signing
 from sha3 import sha3_256
 
@@ -66,12 +65,13 @@ def generate_infinite_keys(global_counter, worker_id, target_string):
             print(f"Total keys generated: {global_counter.value}")
 
 if __name__ == "__main__":
+    config = json.load(open('config.json', 'r'))
     global_counter = multiprocessing.Value('i', 0)
-    cpu_count = os.cpu_count()
+    cpu_count = config.get('threadCount', os.cpu_count())
 
     processes = []
     for i in range(cpu_count):
-        process = multiprocessing.Process(target=generate_infinite_keys, args=(global_counter, i))
+        process = multiprocessing.Process(target=generate_infinite_keys, args=(global_counter, i, config.get('matchString', 'cock')))
         process.start()
         processes.append(process)
 

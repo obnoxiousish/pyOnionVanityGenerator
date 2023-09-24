@@ -1,3 +1,4 @@
+import contextlib
 import sys
 import multiprocessing
 from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout, QPushButton, QSpinBox, QLineEdit, QHBoxLayout
@@ -100,15 +101,13 @@ class OnionGenApp(QWidget):
         self.show()
 
     def load_config(self):
-        try:
+        with contextlib.suppress(FileNotFoundError):
             with open('config.json', 'r') as config_file:
                 config_data = json.load(config_file)
                 if 'matchString' in config_data:
                     self.target_string.setText(config_data['matchString'])
                 if 'threadCount' in config_data:
                     self.thread_picker.setValue(config_data['threadCount'])
-        except FileNotFoundError:
-            pass  # File not found, use default values or leave it empty
 
     def save_config(self):
         config_data = {
