@@ -1,0 +1,3 @@
+pynacl
+pysha3
+pyqt6
